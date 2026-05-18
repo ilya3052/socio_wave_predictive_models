@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Dict, Any, List
 
 from sqlalchemy import String, text, ForeignKey, UniqueConstraint, BigInteger
 from sqlalchemy.dialects.postgresql import JSONB
@@ -52,17 +52,18 @@ class GroupModel(Base, TypesMixin):
     link: Mapped[str_256]
     added_at: Mapped[created_at]
 
-    post_metrics: Mapped['PostMetricsModel'] = relationship(
+    post_metrics: Mapped[List['PostMetricsModel']] = relationship(
+        back_populates='group',
+        uselist=True
+    )
+
+    predictive_models: Mapped['PredictiveModelsModel'] = relationship(
         back_populates='group'
     )
 
-    __table_args__ = (
-        UniqueConstraint("platform_id", "external_id", name="uq_group_platform_external"),
-    )
-
 class PredictiveModelsModel(Base, TypesMixin):
-    __tablename__ = 'social_entities_predictive_models'
-    params: Mapped[JSONB]
+    __tablename__ = 'social_entities_predictivemodels'
+    params: Mapped[Dict[str, Any]] = mapped_column(type_=JSONB)
     model: Mapped[str_128]
     group_id: Mapped[int] = mapped_column(ForeignKey("social_entities_group.id", ondelete='CASCADE'))
     group: Mapped['GroupModel'] = relationship(back_populates='predictive_models')
