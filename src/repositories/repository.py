@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from src.models import GroupModel, PostMetricsModel
+from src.models import GroupModel, PostMetricsModel, PredictiveModelsModel
 from .base import BaseRepository
 
 
@@ -26,6 +26,13 @@ class GroupsRepository(BaseRepository[GroupModel]):
 
     def get_by_external_id(self, external_id):
         return self.session.scalars(select(self.model).filter_by(external_id=external_id)).one_or_none()
+
+class PredictiveModelsRepository(BaseRepository[PredictiveModelsModel]):
+    def __init__(self, session):
+        super().__init__(session, PredictiveModelsModel)
+
+    def get_by_group_id(self, group_id):
+        return self.session.scalars(select(self.model).filter_by(group_id=group_id)).all()
 
 
 class PostMetricsRepository(BaseRepository[PostMetricsModel]):
