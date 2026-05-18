@@ -17,7 +17,7 @@ def train_models_on_groups(groups_ids):
             executor.submit(train_model_on_group, group_id, group_data)
             for group_id, group_data in grouped_data.items()
         ]
-    return futures
+    return [future.result() for future in futures]
 
 
 def train_model_on_group(group_id, group_data):
