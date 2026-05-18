@@ -9,29 +9,29 @@ from src.core.config import regression_models, predictable_variables
 from src.predictive_models.metrics import read_metrics
 
 
-def train_model(groups_ids):
+def train_models_on_groups(groups_ids):
     grouped_data = read_metrics(groups_ids)
 
     with ProcessPoolExecutor(max_workers=os.cpu_count() - 1) as executor:
         futures = [
-            executor.submit(train_group, group_id, group_data)
+            executor.submit(train_model_on_group, group_id, group_data)
             for group_id, group_data in grouped_data.items()
         ]
     return futures
 
 
-def train_group(group_id, group_data):
+def train_model_on_group(group_id, group_data):
     data = {group_id: {}}
     for variable in predictable_variables:
         model_result = []
         for model_name in regression_models:
-            result = train_model_on_data(model_name, regression_models[model_name], variable, group_data)
+            result = train_model_on_group_data(model_name, regression_models[model_name], variable, group_data)
             model_result.append(result)
         data[group_id][variable] = model_result
     return data
 
 
-def train_model_on_data(name, model, predicted_variable, df):
+def train_model_on_group_data(name, model, predicted_variable, df):
     try:
 
         X = df.drop([f'{predicted_variable}_count'], axis=1)
