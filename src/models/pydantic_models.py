@@ -73,14 +73,6 @@ class PostMetricsSchemaBase(ParentSchemaConfig):
         alias="stats_postmetrics_is_weekend",
         description="Признак публикации в выходной день"
     )
-    is_night: bool = Field(
-        alias="stats_postmetrics_is_night",
-        description="Признак публикации ночью"
-    )
-    is_prime_time: bool = Field(
-        alias="stats_postmetrics_is_prime_time",
-        description="Признак публикации вечером"
-    )
     has_text: bool = Field(
         alias="stats_postmetrics_has_text",
         description="Признак наличия текста в посте"
@@ -89,21 +81,9 @@ class PostMetricsSchemaBase(ParentSchemaConfig):
         alias="stats_postmetrics_text_length",
         description="Длина текста поста"
     )
-    is_morning: bool = Field(
-        alias="stats_postmetrics_is_morning",
-        description="Признак публикации утром"
-    )
-    is_lunch: bool = Field(
-        alias="stats_postmetrics_is_lunch",
-        description="Признак публикации в обед"
-    )
     like_view_ratio: float = Field(
         alias="stats_postmetrics_like_view_ratio",
         description="Соотношение лайков к просмотрам"
-    )
-    er: float = Field(
-        alias="stats_postmetrics_er",
-        description="Соотношение всех показателей к просмотрам"
     )
     has_video: bool = Field(
         alias="stats_postmetrics_has_video",
