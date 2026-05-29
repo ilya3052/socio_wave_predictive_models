@@ -33,11 +33,24 @@ class GroupSchema(ParentSchemaConfig):
     )
 
 
-class PredictiveModelsSchema(ParentSchemaConfig):
-    id: int = Field(alias="predictive_models_id", description="Уникальный ID модели в системе")
+class PredictiveModelsSchemaBase(ParentSchemaConfig):
     model: str = Field(alias="predictive_models_model", max_length=128, description="Название модели")
     params: dict = Field(alias="predictive_models_params", description="Параметры модели в формате JSON")
+    predictable_variable: str = Field()
+    r2: float = Field()
+    mae: float = Field()
+    rmse: float = Field()
+    residual_std: float = Field()
+
     group_id: int = Field(description="Внешний ключ для связи с группой")
+
+
+class PredictiveModelsSchema(PredictiveModelsSchemaBase):
+    id: int = Field(alias="predictive_models_id", description="Уникальный ID модели в системе")
+
+
+class PredictiveModelsSchemaCreate(PredictiveModelsSchemaBase):
+    pass
 
 
 class PostMetricsSchemaBase(ParentSchemaConfig):
@@ -72,10 +85,6 @@ class PostMetricsSchemaBase(ParentSchemaConfig):
     is_weekend: bool = Field(
         alias="stats_postmetrics_is_weekend",
         description="Признак публикации в выходной день"
-    )
-    has_text: bool = Field(
-        alias="stats_postmetrics_has_text",
-        description="Признак наличия текста в посте"
     )
     text_length: int = Field(
         alias="stats_postmetrics_text_length",

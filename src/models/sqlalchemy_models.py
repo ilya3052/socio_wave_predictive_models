@@ -65,6 +65,12 @@ class PredictiveModelsModel(Base, TypesMixin):
     __tablename__ = 'social_entities_predictivemodels'
     params: Mapped[Dict[str, Any]] = mapped_column(type_=JSONB)
     model: Mapped[str_128]
+    predictable_variable: Mapped[str_16]
+    r2: Mapped[float]
+    mae: Mapped[float]
+    rmse: Mapped[float]
+    residual_std: Mapped[float]
+
     group_id: Mapped[int] = mapped_column(ForeignKey("social_entities_group.id", ondelete='CASCADE'))
     group: Mapped['GroupModel'] = relationship(back_populates='predictive_models')
 
@@ -79,7 +85,6 @@ class PostMetricsModel(Base, TypesMixin):
     hour: Mapped[int]
     day_of_week: Mapped[int]
     is_weekend: Mapped[bool]
-    has_text: Mapped[bool]
     text_length: Mapped[int]
     like_view_ratio: Mapped[float]
     has_video: Mapped[bool]
