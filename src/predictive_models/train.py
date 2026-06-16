@@ -42,13 +42,11 @@ def train_model_on_group_data(name, model, predicted_variable, df):
         y_log = np.log1p(y)
 
         corr = X.join(y).corr(method='spearman')
-        print(corr.to_string())
         target_corr = corr[target_col]
 
-        features = target_corr[
-            (target_corr.abs() > 0.3) & (target_corr != 1.0)
+        features = target_corr[(abs(target_corr) > 0.3) &
+            (target_corr != 1.0)
             ].dropna().index.tolist()
-
         if predicted_variable == 'likes' and 'like_view_ratio' in features:
             features.remove('like_view_ratio')
 
@@ -63,7 +61,8 @@ def train_model_on_group_data(name, model, predicted_variable, df):
             X,
             y_log,
             cv=5,
-            scoring="r2"
+            scoring="r2",
+            error_score='raise'
         )
 
         y_pred_oof_log = cross_val_predict(pipe, X, y_log, cv=5)
@@ -87,7 +86,7 @@ def train_model_on_group_data(name, model, predicted_variable, df):
         )
 
         coefficients = {
-            feature: 0 if abs(float(c)) < 1e-5 else round(float(c), 5)
+            feature: 0 if abs(float(c)) < 1e-8 else round(float(c), 8)
             for feature, c in zip(features, coef)
         }
 
